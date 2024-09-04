@@ -244,7 +244,9 @@ def register_blueprints(app):
 
     CORS(
         codelight_bp,
-        allow_headers=["Content-Type", "Authorization", "X-App-Id"],
+        resources={r"/*": {"origins": "*"}},
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"],
         methods=["GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH"],
     )
     app.register_blueprint(codelight_bp)
