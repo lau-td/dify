@@ -105,6 +105,23 @@ class AccountService:
         return account
 
     @staticmethod
+    def authenticate_without_password(email: str) -> Account:
+        """Authenticate account with email only, without password"""
+        account = Account.query.filter_by(email=email).first()
+        if not account:
+            raise AccountLoginError('Account not found.')
+
+        if account.status == AccountStatus.BANNED.value or account.status == AccountStatus.CLOSED.value:
+            raise AccountLoginError('Account is banned or closed.')
+
+        if account.status == AccountStatus.PENDING.value:
+            account.status = AccountStatus.ACTIVE.value
+            account.initialized_at = datetime.now(timezone.utc).replace(tzinfo=None)
+            db.session.commit()
+
+        return account
+
+    @staticmethod
     def update_account_password(account, password, new_password):
         """update account password"""
         if account.password and not compare_password(password, account.password, account.password_salt):
@@ -485,6 +502,34 @@ class TenantService:
         tenant = db.session.query(Tenant).filter(Tenant.id == tenant_id).one_or_404()
 
         return tenant.custom_config_dict
+
+    @staticmethod
+    def add_member_to_tenant(account_id: str, tenant_id: str, role: str = 'normal') -> TenantAccountJoin:
+        """Add member to tenant"""
+        account = Account.query.get(account_id)
+        if not account:
+            raise ValueError("Account not found")
+
+        tenant = Tenant.query.get(tenant_id)
+        if not tenant:
+            raise ValueError("Tenant not found")
+
+        # Check if the account is already a member of the tenant
+        existing_join = TenantAccountJoin.query.filter_by(
+            tenant_id=tenant.id,
+            account_id=account.id
+        ).first()
+
+        if existing_join:
+            if existing_join.role == role:
+                raise AccountAlreadyInTenantError("Account is already a member of this tenant with the same role")
+            else:
+                existing_join.role = role
+                db.session.commit()
+                return existing_join
+
+        # Use the existing create_tenant_member method to add the member
+        return TenantService.create_tenant_member(tenant, account, role)
 
 
 class RegisterService:
