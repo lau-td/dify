@@ -241,6 +241,16 @@ def register_blueprints(app):
 
     app.register_blueprint(inner_api_bp)
 
+    # For codelight
+    from controllers.codelight import bp as codelight_bp
+
+    CORS(
+        codelight_bp,
+        allow_headers=["Content-Type", "Authorization", "X-App-Id"],
+        methods=["GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH"],
+    )
+    app.register_blueprint(codelight_bp)
+
 
 # create app
 app = create_app()
