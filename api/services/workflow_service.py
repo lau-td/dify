@@ -298,7 +298,7 @@ class WorkflowService:
         # chatbot convert to workflow mode
         workflow_converter = WorkflowConverter()
 
-        if app_model.mode not in [AppMode.CHAT.value, AppMode.COMPLETION.value]:
+        if app_model.mode not in {AppMode.CHAT.value, AppMode.COMPLETION.value}:
             raise ValueError(f"Current App mode: {app_model.mode} is not supported convert to workflow.")
 
         # convert to workflow
