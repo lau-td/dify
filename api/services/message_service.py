@@ -310,7 +310,7 @@ class MessageService:
         messages = (
             db.session.query(Message)
             .filter(Message.conversation_id == conversation.id)
-            .order_by(Message.created_at.desc())
+            .order_by(Message.created_at.asc())
             .offset(offset)
             .limit(take)
             .all()
