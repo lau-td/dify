@@ -1,5 +1,5 @@
 import json
-from typing import Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from core.app.apps.advanced_chat.app_config_manager import AdvancedChatAppConfigManager
 from core.app.entities.app_invoke_entities import InvokeFrom
@@ -291,3 +291,37 @@ class MessageService:
         )
 
         return questions
+
+    @classmethod
+    def pagination_by_page(
+        cls,
+        app_model: App,
+        user: Optional[Union[Account, EndUser]],
+        conversation_id: str,
+        page: int,
+        take: int,
+    ) -> Tuple[List[Message], int]:
+        if not user:
+            return [], 0
+
+        conversation = ConversationService.get_conversation(
+            app_model=app_model, user=user, conversation_id=conversation_id
+        )
+
+        offset = (page - 1) * take
+        messages = (
+            db.session.query(Message)
+            .filter(Message.conversation_id == conversation.id)
+            .order_by(Message.created_at.desc())
+            .offset(offset)
+            .limit(take)
+            .all()
+        )
+
+        total_count = (
+            db.session.query(Message)
+            .filter(Message.conversation_id == conversation.id)
+            .count()
+        )
+
+        return messages, total_count
