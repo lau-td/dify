@@ -89,8 +89,11 @@ class WorkflowService:
         # fetch draft workflow by app_model
         workflow = self.get_draft_workflow(app_model=app_model)
 
-        if workflow and workflow.unique_hash != unique_hash:
-            raise WorkflowHashNotEqualError()
+        # TODO: uncomment this for codelight usage
+        # if workflow and workflow.unique_hash != unique_hash:
+        #     print("workflow.unique_hash", workflow.unique_hash)
+        #     print("unique_hash", unique_hash)
+        #     raise WorkflowHashNotEqualError()
 
         # validate features structure
         self.validate_features_structure(app_model=app_model, features=features)
