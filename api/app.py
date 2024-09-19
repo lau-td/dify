@@ -17,36 +17,24 @@ import time
 import warnings
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, Response, request
-from flask_cors import CORS
-from werkzeug.exceptions import Unauthorized
-
 import contexts
 from commands import register_commands
 from configs import dify_config
-
 # DO NOT REMOVE BELOW
 from events import event_handlers
-from extensions import (
-    ext_celery,
-    ext_code_based_extension,
-    ext_compress,
-    ext_database,
-    ext_hosting_provider,
-    ext_login,
-    ext_mail,
-    ext_migrate,
-    ext_redis,
-    ext_sentry,
-    ext_storage,
-)
+from extensions import (ext_celery, ext_code_based_extension, ext_compress,
+                        ext_database, ext_hosting_provider, ext_login,
+                        ext_mail, ext_migrate, ext_redis, ext_sentry,
+                        ext_storage)
 from extensions.ext_database import db
 from extensions.ext_login import login_manager
+from flask import Flask, Response, request
+from flask_cors import CORS
 from libs.passport import PassportService
-
 # TODO: Find a way to avoid importing models here
 from models import account, dataset, model, source, task, tool, tools, web
 from services.account_service import AccountService
+from werkzeug.exceptions import Unauthorized
 
 # DO NOT REMOVE ABOVE
 
@@ -164,7 +152,7 @@ def initialize_extensions(app):
 @login_manager.request_loader
 def load_user_from_request(request_from_flask_login):
     """Load user based on the request."""
-    if request.blueprint not in ["console", "inner_api"]:
+    if request.blueprint not in ["console", "inner_api", "codelight_api"]:
         return None
     # Check if the user_id contains a dot, indicating the old format
     auth_header = request.headers.get("Authorization", "")
