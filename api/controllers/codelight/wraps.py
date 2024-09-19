@@ -29,9 +29,7 @@ class FetchUserArg(BaseModel):
     required: bool = False
 
 
-def create_or_update_end_user_for_user_id(
-    app_model: App, user_id: Optional[str] = None
-) -> EndUser:
+def create_or_update_end_user_for_user_id(app_model: App, user_id: Optional[str] = None) -> EndUser:
     """
     Create or update session terminal based on user ID.
     """
@@ -64,9 +62,7 @@ def create_or_update_end_user_for_user_id(
     return end_user
 
 
-def validate_app_id(
-    view: Optional[Callable] = None, *, fetch_user_arg: Optional[FetchUserArg] = None
-):
+def validate_app_id(view: Optional[Callable] = None, *, fetch_user_arg: Optional[FetchUserArg] = None):
     def decorator(view_func):
         @wraps(view_func)
         def decorated_view(*args, **kwargs):
@@ -84,11 +80,7 @@ def validate_app_id(
             if not app_model.enable_api:
                 raise Forbidden("The app's API service has been disabled.")
 
-            tenant = (
-                db.session.query(Tenant)
-                .filter(Tenant.id == app_model.tenant_id)
-                .first()
-            )
+            tenant = db.session.query(Tenant).filter(Tenant.id == app_model.tenant_id).first()
             if tenant.status == TenantStatus.ARCHIVE:
                 raise Forbidden("The workspace's status is archived.")
 
@@ -111,9 +103,7 @@ def validate_app_id(
                 if user_id:
                     user_id = str(user_id)
 
-                kwargs["end_user"] = create_or_update_end_user_for_user_id(
-                    app_model, user_id
-                )
+                kwargs["end_user"] = create_or_update_end_user_for_user_id(app_model, user_id)
 
             return view_func(*args, **kwargs)
 
@@ -125,9 +115,7 @@ def validate_app_id(
         return decorator(view)
 
 
-def get_app_model_with_tenant_id(
-    view: Optional[Callable] = None, *, mode: Union[AppMode, list[AppMode]] = None
-):
+def get_app_model_with_tenant_id(view: Optional[Callable] = None, *, mode: Union[AppMode, list[AppMode]] = None):
     def decorator(view_func):
         @wraps(view_func)
         def decorated_view(*args, **kwargs):
@@ -149,9 +137,7 @@ def get_app_model_with_tenant_id(
 
             app_model = (
                 db.session.query(App)
-                .filter(
-                    App.id == app_id, App.tenant_id == tenant_id, App.status == "normal"
-                )
+                .filter(App.id == app_id, App.tenant_id == tenant_id, App.status == "normal")
                 .first()
             )
 
@@ -170,9 +156,7 @@ def get_app_model_with_tenant_id(
 
                 if app_mode not in modes:
                     mode_values = {m.value for m in modes}
-                    raise AppNotFoundError(
-                        f"App mode is not in the supported list: {mode_values}"
-                    )
+                    raise AppNotFoundError(f"App mode is not in the supported list: {mode_values}")
 
             kwargs["app_model"] = app_model
 

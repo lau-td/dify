@@ -109,10 +109,10 @@ class AccountService:
         """Authenticate account with email only, without password"""
         account = Account.query.filter_by(email=email).first()
         if not account:
-            raise AccountLoginError('Account not found.')
+            raise AccountLoginError("Account not found.")
 
         if account.status == AccountStatus.BANNED.value or account.status == AccountStatus.CLOSED.value:
-            raise AccountLoginError('Account is banned or closed.')
+            raise AccountLoginError("Account is banned or closed.")
 
         if account.status == AccountStatus.PENDING.value:
             account.status = AccountStatus.ACTIVE.value
@@ -504,7 +504,7 @@ class TenantService:
         return tenant.custom_config_dict
 
     @staticmethod
-    def add_member_to_tenant(account_id: str, tenant_id: str, role: str = 'normal') -> TenantAccountJoin:
+    def add_member_to_tenant(account_id: str, tenant_id: str, role: str = "normal") -> TenantAccountJoin:
         """Add member to tenant"""
         account = Account.query.get(account_id)
         if not account:
@@ -515,10 +515,7 @@ class TenantService:
             raise ValueError("Tenant not found")
 
         # Check if the account is already a member of the tenant
-        existing_join = TenantAccountJoin.query.filter_by(
-            tenant_id=tenant.id,
-            account_id=account.id
-        ).first()
+        existing_join = TenantAccountJoin.query.filter_by(tenant_id=tenant.id, account_id=account.id).first()
 
         if existing_join:
             if existing_join.role == role:

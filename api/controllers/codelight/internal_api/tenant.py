@@ -11,7 +11,6 @@ from controllers.codelight import api
 
 
 class CodelightTenantApi(Resource):
-
     @setup_required
     @inner_api_only
     def post(self):
@@ -40,9 +39,7 @@ class CodelightTenantMemberApi(Resource):
     def post(self, tenant_id: uuid.UUID):
         parser = reqparse.RequestParser()
         parser.add_argument("account_id", type=str, required=True, location="json")
-        parser.add_argument(
-            "role", type=str, required=False, default="normal", location="json"
-        )
+        parser.add_argument("role", type=str, required=False, default="normal", location="json")
         args = parser.parse_args()
 
         try:
