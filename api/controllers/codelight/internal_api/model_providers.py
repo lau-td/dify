@@ -9,15 +9,12 @@ from controllers.codelight import api
 
 
 class CodelightModelProviderApi(Resource):
-
     @setup_required
     @inner_api_only
     def post(self, tenant_id: uuid.UUID):
         parser = reqparse.RequestParser()
         parser.add_argument("provider", type=str, required=True, location="json")
-        parser.add_argument(
-            "credentials", type=dict, required=True, nullable=False, location="json"
-        )
+        parser.add_argument("credentials", type=dict, required=True, nullable=False, location="json")
         args = parser.parse_args()
 
         model_provider_service = ModelProviderService()

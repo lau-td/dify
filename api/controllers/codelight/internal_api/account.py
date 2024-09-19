@@ -9,7 +9,6 @@ from services.account_service import RegisterService
 
 
 class CodelightAccountAPI(Resource):
-
     @setup_required
     @inner_api_only
     def post(self):
@@ -17,9 +16,7 @@ class CodelightAccountAPI(Resource):
         parser.add_argument("email", type=str, required=True, location="json")
         parser.add_argument("name", type=str, required=True, location="json")
         parser.add_argument("password", type=str, required=False, location="json")
-        parser.add_argument(
-            "interface_language", type=str, required=False, location="json"
-        )
+        parser.add_argument("interface_language", type=str, required=False, location="json")
         args = parser.parse_args()
 
         try:
