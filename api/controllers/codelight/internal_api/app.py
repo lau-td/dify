@@ -20,7 +20,6 @@ ALLOW_CREATE_APP_MODES = [
 
 
 class CodelightAppListApi(Resource):
-
     @setup_required
     @inner_api_only
     @marshal_with(app_detail_fields)
@@ -29,9 +28,7 @@ class CodelightAppListApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("name", type=str, required=True, location="json")
         parser.add_argument("description", type=str, location="json")
-        parser.add_argument(
-            "mode", type=str, choices=ALLOW_CREATE_APP_MODES, location="json"
-        )
+        parser.add_argument("mode", type=str, choices=ALLOW_CREATE_APP_MODES, location="json")
         parser.add_argument("icon_type", type=str, location="json")
         parser.add_argument("icon", type=str, location="json")
         parser.add_argument("icon_background", type=str, location="json")
@@ -45,9 +42,7 @@ class CodelightAppListApi(Resource):
         if not account:
             raise BadRequest("Account not found")
 
-        tenant_join = TenantAccountJoin.query.filter_by(
-            tenant_id=args["tenant_id"], account_id=account.id
-        ).first()
+        tenant_join = TenantAccountJoin.query.filter_by(tenant_id=args["tenant_id"], account_id=account.id).first()
 
         if not tenant_join.role == TenantAccountJoinRole.OWNER.value:
             raise Forbidden("Only the tenant owner can create apps")

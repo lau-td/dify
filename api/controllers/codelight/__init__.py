@@ -6,5 +6,4 @@ api = ExternalApi(bp)
 
 
 from .console_api import dataset
-from .internal_api import (account, app, auth, model_config, model_providers,
-                           tenant)
+from .internal_api import account, app, auth, model_config, model_providers, tenant

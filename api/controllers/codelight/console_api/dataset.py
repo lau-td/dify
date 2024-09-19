@@ -4,8 +4,7 @@ from controllers.console.setup import setup_required
 from controllers.console.wraps import account_initialization_required
 from core.model_runtime.entities.model_entities import ModelType
 from core.provider_manager import ProviderManager
-from fields.dataset_fields import (dataset_detail_fields,
-                                   dataset_query_detail_fields)
+from fields.dataset_fields import dataset_detail_fields, dataset_query_detail_fields
 from flask import request
 from flask_login import current_user
 from flask_restful import Resource, marshal, marshal_with, reqparse
@@ -27,6 +26,7 @@ def _validate_description_length(description):
         raise ValueError("Description cannot exceed 400 characters.")
     return description
 
+
 class CodelightDatasetListApi(Resource):
     @setup_required
     @login_required
@@ -46,7 +46,7 @@ class CodelightDatasetListApi(Resource):
             datasets, total = DatasetService.get_datasets(
                 page, limit, provider, current_user.current_tenant_id, current_user, search, tag_ids
             )
-            
+
         print("datasets", len(datasets))
 
         # check embedding setting
@@ -117,5 +117,6 @@ class CodelightDatasetListApi(Resource):
             raise DatasetNameDuplicateError()
 
         return marshal(dataset, dataset_detail_fields), 201
+
 
 api.add_resource(CodelightDatasetListApi, "/datasets")
