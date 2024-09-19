@@ -86,8 +86,8 @@ const translation = {
   agenteLogDetail: {
     agentMode: 'Modo Agente',
     toolUsed: 'Ferramenta usada',
-    iterações: 'Iterações',
-    iteração: 'Iteração',
+    // iterações: 'Iterações',
+    // iteração: 'Iteração',
     finalProcessing: 'Processamento Final',
   },
   agentLogDetail: {
