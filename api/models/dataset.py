@@ -10,13 +10,12 @@ import re
 import time
 from json import JSONDecodeError
 
-from sqlalchemy import func
-from sqlalchemy.dialects.postgresql import JSONB
-
 from configs import dify_config
 from core.rag.retrieval.retrival_methods import RetrievalMethod
 from extensions.ext_database import db
 from extensions.ext_storage import storage
+from sqlalchemy import func
+from sqlalchemy.dialects.postgresql import JSONB
 
 from .account import Account
 from .model import App, Tag, TagBinding, UploadFile
@@ -44,8 +43,10 @@ class Dataset(db.Model):
     description = db.Column(db.Text, nullable=True)
     provider = db.Column(db.String(255), nullable=False,
                          server_default=db.text("'vendor'::character varying"))
+    # permission defaul = only_me
+    # change into all_team_members when init knowledge via nimspace api
     permission = db.Column(db.String(255), nullable=False,
-                           server_default=db.text("'only_me'::character varying"))
+                           server_default=db.text("'all_team_members'::character varying"))
     data_source_type = db.Column(db.String(255))
     indexing_technique = db.Column(db.String(255), nullable=True)
     index_struct = db.Column(db.Text, nullable=True)
