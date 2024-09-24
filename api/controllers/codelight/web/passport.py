@@ -50,10 +50,14 @@ class CodelightWebPassportResource(Resource):
         parser.add_argument("email", type=str, required=False, location="json")
         parser.add_argument("name", type=str, required=False, location="json")
 
+        # Codelight: nimspace_ai_id is the ai_id of the nimspace
+        parser.add_argument("nimspace_ai_id", type=uuid.UUID, required=True, location="json")
+
         args = parser.parse_args()
         email = args.get("email")
         user_name = args.get("name")
         user_name = user_name if user_name else "DEFAULT-USER"
+        nimspace_ai_id = str(args.get("nimspace_ai_id"))
         session_id = generate_session_id() if not email else email
         is_anonymous = True if not user_name else False
 
@@ -70,6 +74,7 @@ class CodelightWebPassportResource(Resource):
             "app_id": site.app_id,
             "app_code": app_code,
             "end_user_id": end_user.id,
+            "nimspace_ai_id": nimspace_ai_id,
         }
 
         tk = PassportService().issue(payload)
