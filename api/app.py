@@ -52,11 +52,9 @@ from werkzeug.exceptions import Unauthorized
 
 warnings.simplefilter("ignore", ResourceWarning)
 
-# fix windows platform
-if os.name == "nt":
-    os.system('tzutil /s "UTC"')
-else:
-    os.environ["TZ"] = "UTC"
+os.environ["TZ"] = "UTC"
+# windows platform not support tzset
+if hasattr(time, "tzset"):
     time.tzset()
 
 
