@@ -183,7 +183,8 @@ class MessageBasedAppGenerator(BaseAppGenerator):
                 model_id=model_id,
                 override_model_configs=json.dumps(override_model_configs) if override_model_configs else None,
                 mode=app_config.app_mode.value,
-                name="New conversation",
+                # Codelight: update the conversation name to the first query of the user
+                name=application_generate_entity.query if application_generate_entity.query else 'New conversation',
                 inputs=application_generate_entity.inputs,
                 introduction=introduction,
                 system_instruction="",

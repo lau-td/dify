@@ -55,7 +55,7 @@ class CodelightWebPassportResource(Resource):
         user_name = args.get("name")
         user_name = user_name if user_name else "DEFAULT-USER"
         session_id = generate_session_id() if not email else email
-        is_anonymous = True if not email else False
+        is_anonymous = True if not user_name else False
 
         end_user = create_or_update_end_user_for_user_id(
             app_model, session_id, user_name, is_anonymous, "browser"
