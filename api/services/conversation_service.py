@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from sqlalchemy import asc, desc, or_
 
@@ -161,3 +161,26 @@ class ConversationService:
 
         conversation.is_deleted = True
         db.session.commit()
+
+    @classmethod
+    def pagination_by_page(
+        cls,
+        app_model: App,
+        user: Optional[Union[Account, EndUser]],
+        page: int,
+        take: int,
+        invoke_from: InvokeFrom,
+    ) -> Tuple[List[Conversation], int]:
+        if not user:
+            return [], 0
+
+        base_query = db.session.query(Conversation).filter(
+            Conversation.is_deleted == False,
+            Conversation.app_id == app_model.id,
+            Conversation.from_source == ("api" if isinstance(user, EndUser) else "console"),
+            Conversation.from_end_user_id == (user.id if isinstance(user, EndUser) else None),
+            Conversation.from_account_id == (user.id if isinstance(user, Account) else None),
+            Conversation.invoke_from == invoke_from.value,
+        ).order_by(Conversation.updated_at.desc())
+
+        return db.paginate(base_query, page=page, per_page=take, error_out=False)

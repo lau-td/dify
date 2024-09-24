@@ -208,3 +208,22 @@ conversation_with_model_config_infinite_scroll_pagination_fields = {
     "has_more": fields.Boolean,
     "data": fields.List(fields.Nested(conversation_with_model_config_fields)),
 }
+
+########################################################
+# Codelight Web Conversation Fields
+########################################################
+
+codelight_web_conversation_fields = {
+    "id": fields.String,
+    "status": fields.String,
+    "name": fields.String,
+    "created_at": TimestampField,
+}
+
+codelight_web_conversation_pagination_fields = {
+    "page": fields.Integer,
+    "limit": fields.Integer(attribute="per_page"),
+    "total": fields.Integer,
+    "has_more": fields.Boolean(attribute="has_next"),
+    "data": fields.List(fields.Nested(codelight_web_conversation_fields), attribute="items"),
+}

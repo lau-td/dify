@@ -58,7 +58,6 @@ def create_or_update_end_user_for_user_id(app_model: App, user_id: Optional[str]
         db.session.add(end_user)
         db.session.commit()
 
-    print(end_user)
     return end_user
 
 
