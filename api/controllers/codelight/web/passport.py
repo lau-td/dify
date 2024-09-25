@@ -74,6 +74,8 @@ class CodelightWebPassportResource(Resource):
             "app_id": site.app_id,
             "app_code": app_code,
             "end_user_id": end_user.id,
+            "end_user_name": end_user.name,
+            "end_user_email": end_user.session_id,
             "nimspace_ai_id": nimspace_ai_id,
         }
 
