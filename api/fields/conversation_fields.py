@@ -227,3 +227,32 @@ codelight_web_conversation_pagination_fields = {
     "has_more": fields.Boolean(attribute="has_next"),
     "data": fields.List(fields.Nested(codelight_web_conversation_fields), attribute="items"),
 }
+
+codelight_conversation_with_summary_fields = {
+    "id": fields.String,
+    "status": fields.String,
+    "from_source": fields.String,
+    "from_end_user_id": fields.String,
+    "from_end_user_session_id": fields.String,
+    "from_end_user_name": fields.String,
+    "from_account_id": fields.String,
+    "from_account_name": fields.String,
+    "name": fields.String,
+    "summary": fields.String(attribute="summary_or_query"),
+    "read_at": TimestampField,
+    "created_at": TimestampField,
+    "updated_at": TimestampField,
+    "annotated": fields.Boolean,
+    "model_config": fields.Nested(simple_model_config_fields),
+    "message_count": fields.Integer,
+    "user_feedback_stats": fields.Nested(feedback_stat_fields),
+    "admin_feedback_stats": fields.Nested(feedback_stat_fields),
+}
+
+codelight_conversation_with_summary_pagination_fields = {
+    "page": fields.Integer,
+    "limit": fields.Integer(attribute="per_page"),
+    "total": fields.Integer,
+    "has_more": fields.Boolean(attribute="has_next"),
+    "data": fields.List(fields.Nested(codelight_conversation_with_summary_fields), attribute="items"),
+}
