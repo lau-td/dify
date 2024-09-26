@@ -312,7 +312,7 @@ class MessageService:
         messages = (
             db.session.query(Message)
             .filter(Message.conversation_id == conversation.id)
-            .order_by(Message.created_at.asc())
+            .order_by(Message.created_at.desc())
             .offset(offset)
             .limit(take)
             .all()
@@ -324,4 +324,4 @@ class MessageService:
             .count()
         )
 
-        return messages, total_count
+        return list(reversed(messages)), total_count
