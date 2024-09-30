@@ -45,11 +45,11 @@ jobs:
           script: |
             cd /home/ubuntu/ai-codelight/dify && git pull
 
-            docker-compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml stop api || true
-            docker-compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml stop worker || true
+            docker compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml stop api || true
+            docker compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml stop worker || true
 
-            docker-compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml rm -f api || true
+            docker compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml rm -f api || true
             docker-compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml rm -f worker || true
 
-            docker-compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml up api --build -d
-            docker-compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml up worker --build -d
+            docker compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml up api --build -d
+            docker compose -f /home/ubuntu/ai-codelight/dify/docker/docker-compose.yaml up worker --build -d
