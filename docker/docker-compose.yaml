@@ -187,6 +187,8 @@ x-shared-env: &shared-api-worker-env
   CODE_MAX_NUMBER_ARRAY_LENGTH: ${CODE_MAX_NUMBER_ARRAY_LENGTH:-1000}
   SSRF_PROXY_HTTP_URL: ${SSRF_PROXY_HTTP_URL:-http://ssrf_proxy:3128}
   SSRF_PROXY_HTTPS_URL: ${SSRF_PROXY_HTTPS_URL:-http://ssrf_proxy:3128}
+  INNER_API: ${INNER_API:-false}
+  INNER_API_KEY: ${INNER_API_KEY:-dify-sandbox}
 
 services:
   # API service
@@ -262,7 +264,7 @@ services:
                -c 'maintenance_work_mem=${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}'
                -c 'effective_cache_size=${POSTGRES_EFFECTIVE_CACHE_SIZE:-4096MB}'
     volumes:
-      - ./volumes/db/data:/var/lib/postgresql/data
+      - dify_pg_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 1s
@@ -688,3 +690,4 @@ networks:
 volumes:
   oradata:
   dify_es01_data:
+  dify_pg_data:
