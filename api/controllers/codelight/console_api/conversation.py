@@ -19,6 +19,8 @@ from libs.helper import datetime_string
 from libs.login import login_required
 from models.model import AppMode, Conversation, EndUser, Message, MessageAnnotation
 
+from sqlalchemy.orm import aliased
+
 class CodelightChatConversationApi(Resource):
     @setup_required
     @login_required
@@ -41,7 +43,7 @@ class CodelightChatConversationApi(Resource):
         parser.add_argument(
             "sort_by",
             type=str,
-            choices=["created_at", "-created_at", "updated_at", "-updated_at"],
+            choices=["created_at", "-created_at", "updated_at", "-updated_at", "from_end_user_name", "-from_end_user_name", "from_end_user_session_id", "-from_end_user_session_id", "summary", "-summary"],
             required=False,
             default="-updated_at",
             location="args",
@@ -83,6 +85,7 @@ class CodelightChatConversationApi(Resource):
         account = current_user
         timezone = pytz.timezone(account.timezone)
         utc_timezone = pytz.utc
+        EndUserAlias = aliased(EndUser)
 
         if args["start"]:
             print("still in start")
@@ -134,6 +137,18 @@ class CodelightChatConversationApi(Resource):
                 query = query.order_by(Conversation.updated_at.asc())
             case "-updated_at":
                 query = query.order_by(Conversation.updated_at.desc())
+            case "from_end_user_name":
+                query = query.join(EndUserAlias, Conversation.from_end_user_id == EndUserAlias.id).order_by(EndUserAlias.name.asc())
+            case "-from_end_user_name":
+                query = query.join(EndUserAlias, Conversation.from_end_user_id == EndUserAlias.id).order_by(EndUserAlias.name.desc())
+            case "from_end_user_session_id":
+                query = query.join(EndUserAlias, Conversation.from_end_user_id == EndUserAlias.id).order_by(EndUserAlias.session_id.asc())
+            case "-from_end_user_session_id":
+                query = query.join(EndUserAlias, Conversation.from_end_user_id == EndUserAlias.id).order_by(EndUserAlias.session_id.desc())
+            case "summary":
+                query = query.order_by(Conversation.summary.asc())
+            case "-summary":
+                query = query.order_by(Conversation.summary.desc())
             case _:
                 query = query.order_by(Conversation.created_at.desc())
 
