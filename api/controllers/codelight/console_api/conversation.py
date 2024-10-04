@@ -82,6 +82,9 @@ class CodelightChatConversationApi(Resource):
                 )
             )
 
+        # Ensure the query is grouped by Conversation.id to avoid duplicate records
+        query = query.group_by(Conversation.id)
+
         account = current_user
         timezone = pytz.timezone(account.timezone)
         utc_timezone = pytz.utc
