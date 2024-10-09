@@ -54,3 +54,9 @@ jobs:
       - name: Upload to ECR
         run: |
           docker push ${{ env.IMAGE_REPO }}:latest
+
+      - name: Deploy to EKS
+        run: |
+          aws eks update-kubeconfig --region ap-southeast-1 --name eksBitcoin
+          kubectl rollout restart statefulset/dify-api -n nimspace-production
+          kubectl rollout restart statefulset/dify-worker -n nimspace-production
