@@ -35,6 +35,7 @@ import type {
 } from './types'
 import {
   ControlMode,
+  SupportUploadFileTypes,
 } from './types'
 import { WorkflowContextProvider } from './context'
 import {
@@ -55,6 +56,8 @@ import Header from './header'
 import CustomNode from './nodes'
 import CustomNoteNode from './note-node'
 import { CUSTOM_NOTE_NODE } from './note-node/constants'
+import CustomIterationStartNode from './nodes/iteration-start'
+import { CUSTOM_ITERATION_START_NODE } from './nodes/iteration-start/constants'
 import Operator from './operator'
 import CustomEdge from './custom-edge'
 import CustomConnectionLine from './custom-connection-line'
@@ -67,6 +70,7 @@ import NodeContextmenu from './node-contextmenu'
 import SyncingDataModal from './syncing-data-modal'
 import UpdateDSLModal from './update-dsl-modal'
 import DSLExportConfirmModal from './dsl-export-confirm-modal'
+import LimitTips from './limit-tips'
 import {
   useStore,
   useWorkflowStore,
@@ -88,10 +92,12 @@ import type { Features as FeaturesData } from '@/app/components/base/features/ty
 import { useFeaturesStore } from '@/app/components/base/features/hooks'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
 import Confirm from '@/app/components/base/confirm'
+import { FILE_EXTS } from '@/app/components/base/prompt-editor/constants'
 
 const nodeTypes = {
   [CUSTOM_NODE]: CustomNode,
   [CUSTOM_NOTE_NODE]: CustomNoteNode,
+  [CUSTOM_ITERATION_START_NODE]: CustomIterationStartNode,
 }
 const edgeTypes = {
   [CUSTOM_NODE]: CustomEdge,
@@ -171,6 +177,7 @@ const Workflow: FC<WorkflowProps> = memo(({
     return () => {
       handleSyncWorkflowDraft(true, true)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const { handleRefreshWorkflowDraft } = useWorkflowUpdate()
@@ -317,6 +324,7 @@ const Workflow: FC<WorkflowProps> = memo(({
           />
         )
       }
+      <LimitTips />
       <ReactFlow
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
@@ -400,10 +408,15 @@ const WorkflowWrap = memo(() => {
   const initialFeatures: FeaturesData = {
     file: {
       image: {
-        enabled: !!features.file_upload?.image.enabled,
-        number_limits: features.file_upload?.image.number_limits || 3,
-        transfer_methods: features.file_upload?.image.transfer_methods || ['local_file', 'remote_url'],
+        enabled: !!features.file_upload?.image?.enabled,
+        number_limits: features.file_upload?.image?.number_limits || 3,
+        transfer_methods: features.file_upload?.image?.transfer_methods || ['local_file', 'remote_url'],
       },
+      enabled: !!(features.file_upload?.enabled || features.file_upload?.image?.enabled),
+      allowed_file_types: features.file_upload?.allowed_file_types || [SupportUploadFileTypes.image],
+      allowed_file_extensions: features.file_upload?.allowed_file_extensions || FILE_EXTS[SupportUploadFileTypes.image].map(ext => `.${ext}`),
+      allowed_file_upload_methods: features.file_upload?.allowed_file_upload_methods || features.file_upload?.image?.transfer_methods || ['local_file', 'remote_url'],
+      number_limits: features.file_upload?.number_limits || features.file_upload?.image?.number_limits || 3,
     },
     opening: {
       enabled: !!features.opening_statement,
