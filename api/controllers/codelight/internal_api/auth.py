@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 from controllers.inner_api.wraps import inner_api_only
 from services.account_service import AccountService, TenantService
-from libs.helper import email, get_remote_ip
+from libs.helper import email, extract_remote_ip
 from controllers.console.setup import setup_required
 from controllers.codelight import api
 import services
@@ -32,7 +32,7 @@ class CodelightLoginWithoutPasswordApi(Resource):
                 "data": "workspace not found, please contact system admin to invite you to join in a workspace",
             }
 
-        token = AccountService.login(account, ip_address=get_remote_ip(request))
+        token = AccountService.login(account, ip_address=extract_remote_ip(request))
 
         return {"result": "success", "data": token}
 
