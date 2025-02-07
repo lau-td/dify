@@ -34,7 +34,7 @@ class CodelightLoginWithoutPasswordApi(Resource):
 
         token = AccountService.login(account, ip_address=extract_remote_ip(request))
 
-        return {"result": "success", "data": token}
+        return {"result": "success", "data": token.access_token}
 
 
 api.add_resource(CodelightLoginWithoutPasswordApi, "/login-without-password")
